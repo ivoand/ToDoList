@@ -32,9 +32,29 @@ body {
     display: none;
   }
   
-  .option {
+  .option, .save {
     align-self: center;
     fill: rgb(51, 189, 36);
+  }
+
+.save {
+  display: none;
+}
+.editable .save{
+  display: inherit;
+}
+.editable .option {
+  display: none;
+}
+.task-list .editable {
+  background: #ffffff;
+}
+
+  .option:hover {
+    fill: rgb(161, 161, 161);
+  }
+  .option.active {
+    fill: rgb(134, 134, 134);
   }
   
   .options {
@@ -64,4 +84,6 @@ body {
   .options a:active {
     background: rgb(80, 80, 80);
   }
-  
+  .arrow-bg {
+    display: inline-grid;
+  }
