@@ -11,24 +11,30 @@ document
         event.preventDefault();
         let textarea = this.querySelector("textarea");
         count++;
-        addTask(textarea.value, count);
+        addTask(textarea.value, false, count);
         textarea.value = "";
 
     });
 
-function addTask(text, order) {
+function addTask(text, status, order) {
     if (text !== "") {
         let task = template.cloneNode(true);
         task.setAttribute("data-order", order);
         task.classList.remove("template");
+        if (status) {
+            task.classList.add("done");
+        }
+
         task.querySelector("pre").textContent = text;
-        localStorage.setItem("task[" + order + "]", text);
+        localStorage.setItem("task[" + order + "]", JSON.stringify([text, status]));
         localStorage.setItem("task_count", order);
+
+        // notikums kad uzdevums ir izpildīts (nosvītrots un pelēks)
 
         task.addEventListener("click", function () {
             if (!this.classList.contains("editable")) {
                 this.classList.toggle("done");
-
+                localStorage.setItem("task[" + order + "]", JSON.stringify([text, this.classList.contains("done")]));
             }
 
         });
@@ -59,6 +65,8 @@ function addTask(text, order) {
             e.stopPropagation();
 
             task.classList.remove("editable");
+            text = task.querySelector("pre").textContent
+            localStorage.setItem("task[" + order + "]", JSON.stringify([text, false]));
             task.querySelector("pre").removeAttribute("contenteditable");
         });
 
@@ -66,7 +74,17 @@ function addTask(text, order) {
 
         task.querySelector(".remove").addEventListener("click", function (e) {
             e.stopPropagation();
+
+            for (let i = order; i < count; i++) {
+                localStorage.setItem("task[" + i + "]", localStorage.getItem("task[" + (i + 1) + "]"));
+            }
+
+            localStorage.removeItem("task[" + count + "]");
+
+            count--;
+            localStorage.setItem("task_count", count);
             task.remove();
+
         });
 
         // UP pogas click
@@ -94,5 +112,6 @@ function addTask(text, order) {
 }
 
 for (let i = 1; i <= count; i++) {
-    addTask(localStorage.getItem("task[" + i + "]"), i);
+    let item = JSON.parse(localStorage.getItem("task[" + i + "]"));
+    addTask(item[0], item[1], i);
 }
