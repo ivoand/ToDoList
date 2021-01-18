@@ -32,7 +32,7 @@ body {
     display: none;
   }
   
-  .option, .save {
+  .option, .save, .up, .down {
     align-self: center;
     fill: rgb(51, 189, 36);
   }
@@ -40,7 +40,7 @@ body {
 .save {
   display: none;
 }
-.editable .save{
+.editable .save {
   display: inherit;
 }
 .editable .option {
@@ -50,7 +50,7 @@ body {
   background: #ffffff;
 }
 
-  .option:hover {
+  .option:hover, .up:hover, .down:hover {
     fill: rgb(161, 161, 161);
   }
   .option.active {
